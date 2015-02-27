@@ -5,3 +5,15 @@
 ```bash
 $ npm install -g ionic
 ```
+
+## Paso 2. Crear Proyecto en Blanco.
+
+```bash
+$ ionic start -a todo -i us.bootcampwith.todo todo blankls
+```
+
+## Paso 3. Agregar Plataformas.
+
+```bash
+$ ionic start -a todo -i us.bootcampwith.todo todo blankls
+```
