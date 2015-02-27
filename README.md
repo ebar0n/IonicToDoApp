@@ -15,5 +15,7 @@ $ ionic start -a todo -i us.bootcampwith.todo todo blankls
 ## Paso 3. Agregar Plataformas.
 
 ```bash
-$ ionic start -a todo -i us.bootcampwith.todo todo blankls
+$ cd todo
+$ ionic platform ios
+$ ionic platform android
 ```
