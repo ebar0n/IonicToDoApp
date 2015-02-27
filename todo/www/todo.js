@@ -1,85 +1,69 @@
-angular.module('todo.services', [])
+angular.module('todo', ['ionic','todo.services'])
 
-.factory("SQLService", function ($q) {
-
-	var db;
-	var task='';
-	var deltask;
-	
-	function createDB() {
-		try {
-			db = window.openDatabase("todoDB", "1.0", "ToDoApp", 10*1024*1024);
-			db.transaction(function(tx){
-				tx.executeSql("CREATE TABLE IF NOT EXISTS tasks (task_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, task_name VARCHAR(100) )",[]);
-			});
-		} catch (err) {
-			alert("Error processing SQL: " + err);
-    	}
-		console.log('database created');
-	}
-
-	function setTasks(tname){
-		return promisedQuery("INSERT INTO tasks(task_name) VALUES ('" + tname + "')", defaultResultHandler, defaultErrorHandler);
-	}
-	
-	function delTasks(tid){
-		return promisedQuery("DELETE FROM tasks where task_id = " + tid, defaultResultHandler, defaultErrorHandler);
-	}
-	
-	function UpdateTasks(tname, tid){
-		return promisedQuery("UPDATE tasks SET task_name='" + tname + "' WHERE task_id = " + tid, defaultResultHandler, defaultErrorHandler);
-	}
-
-	function getTasks(){
-		return promisedQuery('SELECT * FROM tasks', defaultResultHandler, defaultErrorHandler);
-	}
-	
-	function defaultResultHandler(deferred) {
-	  return function(tx, results) {
-		var len = results.rows.length;
-		var output_results = [];
+.controller('TodoCtrl', function($scope, $ionicModal, $ionicPopup, SQLService) {
+  
+	SQLService.setup();
 		
-		for (var i=0; i<len; i++){
-			var t = {'task_id':results.rows.item(i).task_id,'task_name':results.rows.item(i).task_name};
-			output_results.push(t);				
-		}
-		
-		deferred.resolve(output_results);  
-	  }  
+	$scope.loadTask = function() {
+		SQLService.all().then(function (results) {
+			$scope.tasks = results;
+		});	
 	}
-	
-	function defaultErrorHandler(deferred) {
-	  return function(tx, results) {
-		var len = 0;
-		var output_results = ''; 
-		deferred.resolve(output_results);
+
+	$scope.loadTask(); 
+
+  // Create and load the Modal
+  $ionicModal.fromTemplateUrl('new-task.html', function(modal) {
+    $scope.taskModal = modal;
+  }, {
+    scope: $scope,
+    animation: 'slide-in-up'
+  });
+
+  // Open our new task modal
+  $scope.newTask = function() {
+    $scope.taskModal.show();
+  };
+
+  // Close the new task modal
+  $scope.closeNewTask = function() {
+    $scope.taskModal.hide();
+  };
+  
+
+  // Called when the form is submitted
+  $scope.createTask = function(task) {
+	SQLService.set(task.title);
+	$scope.loadTask();
+    $scope.taskModal.hide();
+    task.title = "";
+  };
+  
+  $scope.onItemDelete = function(taskid) {
+	$ionicPopup.confirm({
+	  title: 'Confirm Delete',
+	  content: 'Are you sure you want to delete this task?'
+	}).then(function(res) {
+	  if(res) {
+		SQLService.del(taskid);
+		$scope.loadTask();
 	  } 
-	}
-	
-	function promisedQuery(query, successCB, errorCB) {
-	  var deferred = $q.defer();
-	  db.transaction(function(tx){
-		tx.executeSql(query, [], successCB(deferred), errorCB(deferred));      
-	  }, errorCB);
-	  return deferred.promise;  
-	}
-	
-	return {
-		setup: function() {
-		  return createDB();
-		},
-		set: function(t_name) {
-			return setTasks(t_name);
-		},
-		del: function(taskid) {
-			return delTasks(taskid);
-		},
-		edit: function(t_name,taskid) {
-			return UpdateTasks(t_name, taskid);
-		},
-		all: function() {
-		  return getTasks();
-		}
-	}
+	});
+  };
+  
+  $scope.onItemEdit = function(taskid) {
+    $ionicPopup.prompt({
+	  title: 'Update Task',
+	  subTitle: 'Enter new task'
+	}).then(function(res) {
+		SQLService.edit(res, taskid);
+		$scope.loadTask();
+	});
+  };
+  
+  $scope.moveItem = function(item, fromIndex, toIndex) {
+    $scope.items.splice(fromIndex, 1);
+    $scope.items.splice(toIndex, 0, item);
+  };
+  
 });
-
