@@ -19,3 +19,8 @@ $ cd todo
 $ ionic platform ios
 $ ionic platform android
 ```
+## Paso 4. Crear Iconos y SplashScreen.
+
+```bash
+$ ionic resources
+```
