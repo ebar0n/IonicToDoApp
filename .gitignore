@@ -1,3 +1,5 @@
 node_modules
 plugins
 platforms
+todo/resources/android/
+todo/resources/ios/

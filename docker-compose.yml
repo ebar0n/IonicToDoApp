@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  app:
+    image: agileek/ionic-framework
+    volumes:
+      - ./:/app/
+      - ~/data/ionic/android:/root/.android
+      - ~/data/ionic/cordova:/root/.cordova
+      - ~/data/ionic/gem:/root/.gem
+      - ~/data/ionic/gradle:/root/.gradle
+      - ~/data/ionic/ionic:/root/.ionic
+      - ~/data/ionic/npm-cache:/root/.npm
+
+    working_dir: /app/todo
+    command: ionic serve -a
+    ports:
+      - "8100:8100"
+      - "35729:35729"

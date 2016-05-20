@@ -2,8 +2,7 @@
   "name": "todo",
   "app_id": "",
   "gulpStartupTasks": [
-    "sass",
-    "watch"
+    "sass"
   ],
   "watchPatterns": [
     "www/**/*",
