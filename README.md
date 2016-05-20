@@ -27,20 +27,26 @@ $ ionic resources android
 $ ionic build android
 ```
 
+Copiar archivo `./todo/platforms/android/build/outputs/apk/android-debug.apk` a un movil con Andrid
+
 ## Comandos utiles
 
         ionic start --list
-        ionic start myapp tabs
+        ionic start myapp [template]
 
-
-Copiar archivo `./todo/platforms/android/build/outputs/apk/android-debug.apk` a un movil con Andrid
-
+        ionic platform list
+        ionic platform add [platform]
 
 ## Enlaces
 
 0. Creator 
 
     [Creator](https://creator.ionic.io/)
+    [Site](http://ionicframework.com/)
+    [Code](https://github.com/driftyco/ionic)
+    [Documentación](http://ionicframework.com/docs/)
+
+## Tutoriales
 
 0. Ionic
 
